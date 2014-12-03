@@ -15,12 +15,29 @@ User.register = function(obj, cb){
   var user = new User(obj);
 
   makeAvatarUrl(obj.avatar, function(err, avatar){
-    user.avatar = avatar.url;
     user.password = bcrypt.hashSync(obj.password, 10);
-    pg.query('insert into users (username, password, avatar) values ($1, $2, $3) returning id', [user.username, user.password, user.avatar], function(err, results){
+    pg.query('insert into users (username, password, avatar) values ($1, $2, $3) returning id', [user.username, user.password, avatar.url], function(err, results){
       if(err){return cb(err);}
-      download(user.avatar, avatar.file, cb);
+      download(obj.avatar, avatar.file, cb);
     });
+  });
+};
+
+User.login = function(obj, cb){
+  pg.query('select * from users where username = $1 limit 1', [obj.username], function(err, results){
+    var user = results.rows[0];
+
+    if(!user){
+      return cb();
+    }
+
+    var isGood = bcrypt.compareSync(obj.password, user.password);
+
+    if(!isGood){
+      return cb();
+    }
+
+    cb(user);
   });
 };
 

@@ -8,19 +8,16 @@ module.exports = {
   tags:['users'],
   validate: {
     payload: {
-      username: Joi.string().min(3).max(12).required(),
+      username: Joi.string().min(3).max(255).required(),
       password: Joi.string().min(3).required(),
       avatar: Joi.string().required()
     }
   },
-  auth: {
-    mode: 'try'
-  },
+  auth: false,
   handler: function(request, reply){
     User.register(request.payload, function(err, results){
-      console.log('error in controller', err);
-      console.log('results in controller', results);
-      reply();
+      console.log('error', err);
+      reply().code(!err ? 200 : 400);
     });
   }
 };

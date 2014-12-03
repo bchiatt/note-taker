@@ -12,18 +12,13 @@ module.exports = {
       password: Joi.string().required()
     }
   },
-  auth: {
-    mode: 'try'
-  },
+  auth: false,
   handler: function(request, reply){
     User.login(request.payload, function(user){
-      if(user){
-        user.password = null;
-        request.auth.session.set(user);
-        reply(user);
-      }else {
-        reply().code(401);
-      }
+      if(!user){return reply().code(401);}
+
+      request.auth.session.set(user);
+      reply(user);
     });
   }
 };

@@ -26,17 +26,12 @@ User.register = function(obj, cb){
 User.login = function(obj, cb){
   pg.query('select * from users where username = $1 limit 1', [obj.username], function(err, results){
     var user = results.rows[0];
+    if(!user){return cb();}
 
-    if(!user){
-      return cb();
-    }
+    var isAuth = bcrypt.compareSync(obj.password, user.password);
+    if(!isAuth){return cb();}
 
-    var isGood = bcrypt.compareSync(obj.password, user.password);
-
-    if(!isGood){
-      return cb();
-    }
-
+    delete user.password;
     cb(user);
   });
 };

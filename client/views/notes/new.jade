@@ -1,0 +1,22 @@
+.row
+  .small-12.columns
+    form
+      .row
+        .small-6.columns
+          label(for='title') Title
+          input#title(type='text', name='title', ng-model='note.title', required, autofocus)
+        .small-6.columns
+      .row
+        .small-6.columns
+          label(for='body') Body
+          textarea#body(type='password', name='body', ng-model='note.body', required)
+        .small-6.columns
+      .row
+        .small-6.columns
+          label(for='tags') Tags (comma separated)
+          input#tags(type='text', name='tags', ng-model='note.tags')
+        .small-6.columns
+      .row
+        .small-6.columns
+          button(ng-click='create()') Create
+        .small-6.columns

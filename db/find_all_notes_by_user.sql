@@ -24,3 +24,16 @@ $$ LANGUAGE plpgsql;
 -- This is the query to call in the model
 -- find_all_notes_by_user(userId,limit)
 -- SELECT * FROM find_all_notes_by_user(1, 10);
+
+/*
+-- chyld's code
+select n.id, n.title, n.body, array_agg(t.id) as tagIds, array_agg(t.name) as tags
+from notes n
+inner join notes_tags nt on n.id = nt.note_id
+inner join tags t on t.id = nt.tag_id
+where n.userid = 8
+group by n.id
+order by n.title asc
+limit 3
+offset 0; --offset 3 goes to page 2, offset 6 goes to page 3, etc.
+*/

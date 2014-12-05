@@ -23,7 +23,7 @@ Note.list = function(userId, limit, cb){
 };
 
 Note.remove = function(id, cb){
-  pg.query('SELECT * FROM delete_note($1)', [id], function(err, results){
+  pg.query('SELECT delete_note($1)', [id], function(err, results){
     cb(err, results.rows);
   });
 };

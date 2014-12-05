@@ -7,6 +7,12 @@
         $scope.notes = response.data;
       });
 
+      $scope.remove = function(id, index){
+        Note.remove(id).then(function(response){
+          $scope.notes.splice(index, 1);
+        });
+      };
+
       $scope.addNote = function(){
         $state.go('notes.new');
       };

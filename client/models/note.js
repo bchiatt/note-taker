@@ -11,6 +11,11 @@
       function create(note){
         return $http.post('/notes', note);
       }
-      return {list:list, create:create};
+
+      function remove(id){
+        return $http.delete('/notes/' + id);
+      }
+
+      return {list:list, create:create, remove:remove};
     }]);
 })();

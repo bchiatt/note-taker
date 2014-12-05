@@ -22,6 +22,12 @@ Note.list = function(userId, limit, cb){
    });
 };
 
+Note.remove = function(id, cb){
+  pg.query('SELECT * FROM delete_note($1)', [id], function(err, results){
+    cb(err, results.rows);
+  });
+};
+
 Note.create = function(obj, cb){
   pg.query('insert into notes (title, body, userId) values ($1, $2, $3) returning id', [obj.title, obj.body, obj.userId], function(err, results){
     if(err || !results.rowCount){return cb();}

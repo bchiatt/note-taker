@@ -1,6 +1,6 @@
 'use strict';
 
-var Joi = require('Joi'),
+var Joi = require('joi'),
     Note = require('../../../models/note');
 
 module.exports = {

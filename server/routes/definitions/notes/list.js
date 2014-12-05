@@ -1,13 +1,13 @@
 'use strict';
 
-var Joi = require('Joi'),
+var Joi = require('joi'),
     Note = require('../../../models/note');
 
 module.exports = {
   description: 'Show all Notes',
   tags:['notes'],
   validate: {
-    params: {
+    query: {
       limit: Joi.string()
     }
   },

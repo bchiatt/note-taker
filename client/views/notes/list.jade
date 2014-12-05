@@ -2,3 +2,18 @@
   .small-12.columns
     h3 Notebook
     button(ng-click='addNote()') Add Note
+.row
+  .small-12.columns
+    table
+      thead
+        th Title
+        th Body
+        th Update
+        th Tags
+      tbody
+        tr(ng-repeat='n in notes')
+          td {{n.title}}
+          td {{n.body}}
+          td {{n.updatedAt | date}}
+          td
+            span(ng-repeat='t in n.tags') {{t}}  

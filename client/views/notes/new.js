@@ -7,7 +7,7 @@
 
     $scope.create = function(){
       Note.create($scope.note).then(function(response){
-        console.log('note back from the server', response.data);
+        $state.go('notes.list');
       });
     };
   }]);

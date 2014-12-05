@@ -1,0 +1,11 @@
+--insert into users (username, password, avatar) values ('bob', '$2a$10$DG22WPwDsAeN9i3E5K.np.F.PMmuCTWzEOkWJwdeoqDIg386bTrHG', 'https://s3.amazonaws.com/bc-note-taker/be924689d189368137807a4613e73cf437c99f93a1364d1bf55d10ac26ed07fa0c919b4755f348ef0c9177c13f708b75.avatar.png');
+--insert into users (username, password, avatar) values ('sue', '$2a$10$mQCR6iq3nQ68enLjVTbAN.dkn4IyJyY400pF5lCrKP0OzjJrAO4Te', 'https://s3.amazonaws.com/bc-note-taker/8ba7e6c1f292d28cc88c1ede2084b7d9af9c6f116fd10e1302c322fc3aeb609d08502c36ea664b36005d0f5fdd2ad648.avatar.png');
+--delete from notes_tags;
+--delete from tags;
+--delete from notes;
+--select add_note(8, 'b', 'b1', 'javascript,angular,hapi');
+--select add_note(8, 'c', 'c1', 'javascript,angular,cake');
+--select add_note(8, 'd', 'd1', 'javascript,hapi,cake');
+--select add_note(8, 'e', 'e1', 'angular,cake');
+--select add_note(9, 'f', 'f1', 'javascript,hapi,cake');
+--select add_note(9, 'g', 'g1', 'angular,cake,javascript');

@@ -6,6 +6,22 @@ var pg    = require('../postgres/manager'),
 function Note(){
 }
 
+// alternative method using pseql query
+/*
+Note.create = function(user, obj, cb){
+  pg.query('select add_note($1, $2, $3, $4)', [user.id, obj.title, obj.body, obj.tags], function(err, results){
+    console.log(err, results);
+    cb();
+  });
+};
+*/
+
+Note.list = function(userId, limit, cb){
+   pg.query('SELECT * FROM find_all_notes_by_user($1, $2)', [userId, limit], function(err, results){
+     cb(err, results.rows);
+   });
+};
+
 Note.create = function(obj, cb){
   pg.query('insert into notes (title, body, userId) values ($1, $2, $3) returning id', [obj.title, obj.body, obj.userId], function(err, results){
     if(err || !results.rowCount){return cb();}

@@ -4,8 +4,8 @@
   angular.module('note-taker')
     .factory('Note', ['$http', function($http){
 
-      function list(){
-        return $http.get('/notes');
+      function list(limit){
+        return $http.get('/notes?limit=' + limit);
       }
 
       function create(note){

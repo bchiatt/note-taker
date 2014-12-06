@@ -4,10 +4,10 @@ declare
   nid integer;
   tagname varchar;
   tid integer;
-  photo_url varchar;
+  p_url varchar;
 begin
-  insert into notes (title, body, userId) values (title, body, user_id) returning id into nid;
-  CREATE TEMP TABLE tagger ON COMMIT DROP AS SELECT nid, t.id as tid, t.name as tname FROM tags t where t.name = any(names);
+insert into notes (title, body, userId) values (title, body, user_id) returning id into nid;
+  CREATE TEMP TABLE tagger ON COMMIT DROP AS SELECT nid, t.id as tid, t.name as tname FROM tags t where t.name = any(tags);
 
   foreach tagname in array tags
   loop
@@ -21,10 +21,10 @@ begin
 
   insert into notes_tags select t.nid, t.tid from tagger t;
 
-  foreach photo_url in array photo_urls
+  foreach p_url in array photo_urls
   loop
-    insert into photos (url, note_id) values (photo_url, nid);
-  end loop;
+    insert into photos (note_id, url) values (nid, p_url);
+    end loop;
 
   return nid;
 end;

@@ -1,21 +1,25 @@
 'use strict';
 
-var Joi  = require('joi'),
-    Note = require('../../../models/note');
+// var Joi  = require('joi'),
+var Note = require('../../../models/note');
 
 module.exports = {
   description: 'Create a New Note',
   tags:['notes'],
-  validate: {
-    payload: {
-      title: Joi.string().min(3).max(255).required(),
-      body: Joi.string().min(3).required(),
-      tags: Joi.string()
-    }
+  payload: {
+    output: 'stream',
+    parse: true,
+    allow: 'multipart/form-data'
   },
+  // validate: {
+    // payload: {
+      // title: Joi.string().min(1).max(255).required(),
+      // body: Joi.string().min(1).required(),
+      // tags: Joi.string()
+    // }
+  // },
   handler: function(request, reply){
-    request.payload.userId = request.auth.credentials.id;
-    Note.create(request.payload, function(result){
+    Note.create(request.auth.credentials.id, request.payload, function(result){
       reply().code(result ? 200 : 400);
     });
   }

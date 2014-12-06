@@ -8,14 +8,10 @@
         return $http.get('/notes?limit=' + limit);
       }
 
-      function create(note){
-        return $http.post('/notes', note);
-      }
-
       function remove(id){
         return $http.delete('/notes/' + id);
       }
 
-      return {list:list, create:create, remove:remove};
+      return {list:list, remove:remove};
     }]);
 })();

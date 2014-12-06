@@ -18,6 +18,7 @@ User.register = function(obj, cb){
     user.password = bcrypt.hashSync(obj.password, 10);
     pg.query('insert into users (username, password, avatar) values ($1, $2, $3) returning id', [user.username, user.password, avatar.url], function(err, results){
       if(err){return cb(err);}
+      // insert createUserBucker(id, cb) here
       download(obj.avatar, avatar.file, cb);
     });
   });
@@ -42,10 +43,14 @@ function makeAvatarUrl(url, cb){
   crypto.randomBytes(48, function(ex, buf){
     var token = buf.toString('hex'),
         file = token + '.avatar' + ext,
-        avatar = 'https://s3.amazonaws.com/' + process.env.AWS_BUCKET + '/' + file;
+        avatar = 'https://s3.amazonaws.com/' + process.env.AWS_BUCKET + file;
     cb(null, {file:file, url:avatar});
   });
 }
+
+// function createUserBucket(id, cb){
+//
+// }
 
 function download(url, file, cb){
   var s3   = new AWS.S3();

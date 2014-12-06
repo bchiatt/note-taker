@@ -18,5 +18,9 @@
         .small-6.columns
       .row
         .small-6.columns
+          label(for='photos') Upload Photo(s)
+          input#photos(type='file', name='photos', ng-file-select, ng-file-change='fileSelected($files)', ng-multiple='true')
+      .row
+        .small-6.columns
           button(ng-click='create()') Create
         .small-6.columns

@@ -16,12 +16,19 @@ Note.list = function(userId, limit, cb){
 };
 
 Note.remove = function(id, cb){
-  // add photo removal from s3
-  pg.query('SELECT array_agg(url) FROM photos WHERE note_id = $1', [id], function(err, results){
-    console.log(results.rows);
-    // pg.query('SELECT delete_note($1)', [id], function(err, results){
-      // cb(err, results.rows);
-    // });
+  pg.query('SELECT array_agg(url) as urls FROM photos WHERE note_id = $1', [id], function(err, results){
+    var photos = (results.rows ? results.rows[0].urls.map(makePhotoDeleteObj) : null);
+    pg.query('SELECT delete_note($1)', [id], function(err, results){
+      var s3 = new AWS.S3(),
+          params = {
+            Bucket: process.env.AWS_BUCKET,
+            Delete: {
+              Objects: photos
+            }
+          };
+
+      s3.deleteObjects(params, cb);
+    });
   });
 };
 
@@ -41,6 +48,12 @@ Note.create = function(userId, obj, cb){
 
 Note.listByUserId = function(id){
 };
+
+function makePhotoDeleteObj(photo){
+  var key = photo.match(/bc-note-taker\/([^']*)/)[1];
+
+  return {Key: key};
+}
 
 function makePhotoUrls(photo, cb){
   var ext  = path.extname(photo.hapi.filename);

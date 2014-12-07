@@ -16,6 +16,7 @@ Note.list = function(userId, limit, cb){
 };
 
 Note.remove = function(id, cb){
+  // add photo removal from s3
   pg.query('SELECT delete_note($1)', [id], function(err, results){
     cb(err, results.rows);
   });
@@ -23,11 +24,12 @@ Note.remove = function(id, cb){
 
 Note.create = function(userId, obj, cb){
   obj.tags = obj.tags.toLowerCase().split(',').map(function(t){return t.trim();});
+  obj.file = (obj.file[0] ? obj.file : [obj.file]);
 
   async.map(obj.file, makePhotoUrls, function(err, photoUrls){
-    async.map(photoUrls, savePhotosToS3, function(){
-      var urls = photoUrls.map(function(obj){return obj.url;});
-      pg.query('select add_note($1, $2, $3, $4, $5)', [userId, obj.title, obj.body, obj.tags, urls], function(err, results){
+    var urls = photoUrls.map(function(obj){return obj.url;});
+    pg.query('select add_note($1, $2, $3, $4, $5)', [userId, obj.title, obj.body, obj.tags, urls], function(err, results){
+      async.map(photoUrls, savePhotosToS3, function(){
         cb();
       });
     });

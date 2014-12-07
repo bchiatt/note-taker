@@ -8,6 +8,7 @@ module.exports = {
   tags:['notes'],
   payload: {
     output: 'stream',
+    maxBytes: 300000000,
     parse: true,
     allow: 'multipart/form-data'
   },

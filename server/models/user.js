@@ -43,7 +43,7 @@ function makeAvatarUrl(url, cb){
   crypto.randomBytes(48, function(ex, buf){
     var token = buf.toString('hex'),
         file = token + '.avatar' + ext,
-        avatar = 'https://s3.amazonaws.com/' + process.env.AWS_BUCKET + file;
+        avatar = 'https://s3.amazonaws.com/' + process.env.AWS_BUCKET + '/' + file;
     cb(null, {file:file, url:avatar});
   });
 }

@@ -17,8 +17,11 @@ Note.list = function(userId, limit, cb){
 
 Note.remove = function(id, cb){
   // add photo removal from s3
-  pg.query('SELECT delete_note($1)', [id], function(err, results){
-    cb(err, results.rows);
+  pg.query('SELECT array_agg(url) FROM photos WHERE note_id = $1', [id], function(err, results){
+    console.log(results.rows);
+    // pg.query('SELECT delete_note($1)', [id], function(err, results){
+      // cb(err, results.rows);
+    // });
   });
 };
 
@@ -45,7 +48,7 @@ function makePhotoUrls(photo, cb){
   crypto.randomBytes(48, function(ex, buf){
     var token = buf.toString('hex'),
     key       = token + '.img' + ext,
-    url = 'https://s3.amazonaws.com/' + process.env.AWS_BUCKET + key;
+    url = 'https://s3.amazonaws.com/' + process.env.AWS_BUCKET + '/' + key;
     cb(null, {key:key, url:url, body:photo._data});
   });
 }

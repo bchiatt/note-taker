@@ -20,8 +20,8 @@ module.exports = {
     // }
   // },
   handler: function(request, reply){
-    Note.create(request.auth.credentials.id, request.payload, function(result){
-      reply().code(result ? 200 : 400);
+    Note.create(request.auth.credentials.id, request.payload, function(err){
+      reply().code(!err ? 200 : 400);
     });
   }
 };

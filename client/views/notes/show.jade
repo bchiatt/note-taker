@@ -1,0 +1,22 @@
+.row
+.row
+  .small-12.columns
+    table
+      thead
+        th Remove
+        th Title
+        th Body
+        th Update
+        th Tags
+      tbody
+        tr
+          td: a(href='', ng-click='remove(note.noteId)') delete
+          td {{note.title}}
+          td {{note.body}}
+          td {{note.updatedAt | date}}
+          td
+            span(ng-repeat='t in note.tags') {{t}}  
+            
+.row
+  .small-12.columns
+    .photo(ng-repeat='p in note.photos', style='background-image: url("{{p}}")')

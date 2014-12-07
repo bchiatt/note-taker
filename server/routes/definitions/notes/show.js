@@ -4,7 +4,7 @@ var Joi = require('joi'),
     Note = require('../../../models/note');
 
 module.exports = {
-  description: 'Delete a Note',
+  description: 'Show a Note',
   tags:['notes'],
   validate: {
     params: {
@@ -12,7 +12,7 @@ module.exports = {
     }
   },
   handler: function(request, reply){
-    Note.remove(request.params.id, function(err, result){
+    Note.findOne(request.params.id, function(err, result){
       reply(result).code(result ? 200 : 400);
     });
   }

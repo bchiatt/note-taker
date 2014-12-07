@@ -15,6 +15,12 @@ Note.list = function(userId, limit, cb){
    });
 };
 
+Note.findOne = function(noteId, cb){
+  pg.query('SELECT * FROM find_note_by_id($1)', [noteId], function(err, results){
+    cb(err, results && results.rows ? results.rows[0] : null);
+  });
+};
+
 Note.remove = function(id, cb){
   pg.query('SELECT array_agg(url) as urls FROM photos WHERE note_id = $1', [id], function(err, results){
     var photos = (results.rows ? results.rows[0].urls.map(makePhotoDeleteObj) : null);

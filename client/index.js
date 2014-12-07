@@ -11,6 +11,7 @@
         .state('login',      {url:'/login',    templateUrl:'/views/users/users.html', controller:'UsersCtrl'})
         .state('notes',      {url:'/notes',    templateUrl:'/views/notes/notes.html', abstract:true})
         .state('notes.list', {url:'',          templateUrl:'/views/notes/list.html',  controller:'NotesListCtrl'})
+        .state('notes.show', {url:'/{id}',     templateUrl:'/views/notes/show.html',  controller:'NotesShowCtrl'})
         .state('notes.new',  {url:'/new',      templateUrl:'/views/notes/new.html',   controller:'NotesNewCtrl'});
     }])
     .run(['$rootScope', '$http', function($rootScope, $http){

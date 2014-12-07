@@ -12,6 +12,10 @@
         return $http.delete('/notes/' + id);
       }
 
-      return {list:list, remove:remove};
+      function findOne(id){
+        return $http.get('/notes/' + id);
+      }
+
+      return {list:list, remove:remove, findOne:findOne};
     }]);
 })();

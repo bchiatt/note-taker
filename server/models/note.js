@@ -9,15 +9,18 @@ var pg     = require('../postgres/manager'),
 function Note(){
 }
 
-Note.list = function(userId, limit, cb){
-   pg.query('SELECT * FROM find_all_notes_by_user($1, $2)', [userId, limit], function(err, results){
+Note.list = function(userId, limit, offset, cb){
+   console.log('limit', limit);
+   console.log('offset', offset);
+   pg.query('SELECT * FROM find_all_notes_by_user($1, $2, $3)', [userId, limit, offset], function(err, results){
+     console.log('err', err);
      cb(err, results.rows);
    });
 };
 
-Note.findOne = function(noteId, cb){
+Note.findOne = function(noteId, limit, offset, cb){
   pg.query('SELECT * FROM find_note_by_id($1)', [noteId], function(err, results){
-    cb(err, results && results.rows ? results.rows[0] : null);
+    cb(err, results && results.rows ? results.rows : null);
   });
 };
 
@@ -40,10 +43,12 @@ Note.remove = function(id, cb){
 
 Note.create = function(userId, obj, cb){
   obj.tags = obj.tags.toLowerCase().split(',').map(function(t){return t.trim();});
+  obj.file = obj.file || [];
   obj.file = (obj.file[0] ? obj.file : [obj.file]);
 
   async.map(obj.file, makePhotoUrls, function(err, photoUrls){
-    var urls = photoUrls.map(function(obj){return obj.url;});
+    console.log(photoUrls[0]);
+    var urls = (photoUrls[0] === null ? [] : photoUrls.map(function(obj){return obj.url;}));
     pg.query('select add_note($1, $2, $3, $4, $5)', [userId, obj.title, obj.body, obj.tags, urls], function(err, results){
       async.map(photoUrls, savePhotosToS3, function(){
         cb();
@@ -62,6 +67,7 @@ function makePhotoDeleteObj(photo){
 }
 
 function makePhotoUrls(photo, cb){
+  if(!photo.length){return cb(null, null);}
   var ext  = path.extname(photo.hapi.filename);
 
   crypto.randomBytes(48, function(ex, buf){
@@ -73,6 +79,7 @@ function makePhotoUrls(photo, cb){
 }
 
 function savePhotosToS3(photo, cb){
+  if(photo === null){return cb();}
   var s3   = new AWS.S3(),
       params = {Bucket: process.env.AWS_BUCKET, Key: photo.key, Body: photo.body, ACL: 'public-read'};
   s3.putObject(params, cb);

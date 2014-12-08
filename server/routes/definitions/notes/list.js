@@ -8,11 +8,14 @@ module.exports = {
   tags:['notes'],
   validate: {
     query: {
-      limit: Joi.string()
+      limit: Joi.string(),
+      offset: Joi.string()
     }
   },
   handler: function(request, reply){
-    Note.list(request.auth.credentials.id, request.params.limit || 10, function(err, result){
+    var limit  = request.query.limit || 5,
+        offset = request.query.offset || 0;
+    Note.list(request.auth.credentials.id, limit, offset, function(err, result){
       reply(result);
     });
   }

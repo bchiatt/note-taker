@@ -4,8 +4,8 @@
   angular.module('note-taker')
     .factory('Note', ['$http', function($http){
 
-      function list(limit){
-        return $http.get('/notes?limit=' + limit);
+      function list(query){
+        return $http.get('/notes?limit=' + query.limit + '&offset=' + query.offset);
       }
 
       function remove(id){

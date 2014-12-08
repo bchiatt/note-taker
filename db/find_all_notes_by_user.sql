@@ -1,5 +1,5 @@
 --DROP FUNCTION find_all_notes_by_user(integer,integer,character varying);
-CREATE OR REPLACE FUNCTION find_all_notes_by_user(user_id integer, lmt integer)
+CREATE OR REPLACE FUNCTION find_all_notes_by_user(user_id integer, lmt integer, ofst integer)
 RETURNS TABLE("noteId" integer, "title" varchar, "body" text, "updatedAt" timestamp, "tags" varchar[]) AS $$
 DECLARE
 BEGIN
@@ -11,6 +11,7 @@ BEGIN
     WHERE n.userid = user_id
     GROUP BY n.id
     ORDER BY n.updated_at DESC
+    OFFSET ofst
     LIMIT lmt;
 
   RETURN QUERY

@@ -4,16 +4,34 @@
     button(ng-click='addNote()') Add Note
 .row
   .small-12.columns
+    form
+      .row
+        .small-6.columns
+          label(for='limit') Limit
+          input#limit(type='number', name='limit', ng-model='query.limit')
+        .small-6.columns
+      .row
+        .small-6.columns
+          label(for='offset') Offset
+          input#offset(type='number', name='offset', ng-model='query.offset')
+        .small-6.columns
+      .row
+        .small-6.columns
+          button(ng-click='queryNotes()') Query
+        .small-6.columns
+          
+.row
+  .small-12.columns
     table
       thead
         th Remove
         th Title
-        th Updated
+        th Update
         th Tags
       tbody
         tr(ng-repeat='n in notes')
           td: a(href='', ng-click='remove(n.noteId, $index)') delete
-          td: a(href='#/notes/{{n.noteId}}') {{n.title}}
+          td: a(href='notes/{{n.noteId}}') {{n.title}}
           td {{n.updatedAt | date}}
           td
             span(ng-repeat='t in n.tags'): a(href='') {{t}}  

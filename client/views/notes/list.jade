@@ -34,4 +34,4 @@
           td: a(href='#/notes/{{n.noteId}}') {{n.title}}
           td {{n.updatedAt | date}}
           td
-            span(ng-repeat='t in n.tags'): a(href='') {{t}}  
+            span(ng-repeat='t in n.tags'): a(ui-sref='notes.list({tag:t})') {{t}}  

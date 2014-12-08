@@ -5,7 +5,7 @@
     .factory('Note', ['$http', function($http){
 
       function list(query){
-        return $http.get('/notes?limit=' + query.limit + '&offset=' + query.offset);
+        return $http.get('/notes?limit=' + query.limit + '&offset=' + query.offset + '&tag=' + query.tag);
       }
 
       function remove(id){

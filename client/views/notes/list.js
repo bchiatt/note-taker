@@ -4,8 +4,9 @@
   angular.module('note-taker')
     .controller('NotesListCtrl', ['$scope', '$state', 'Note', function($scope, $state, Note){
       $scope.query = {
-                       limit:  5,
-                       offset: 0
+                       limit:  $state.params.limit || 5,
+                       offset: $state.params.offset || 0,
+                       tag:    $state.params.tag || '%'
                      };
 
       $scope.queryNotes = function(){

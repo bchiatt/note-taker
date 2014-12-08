@@ -1,5 +1,5 @@
 --DROP FUNCTION find_all_notes_by_user(integer,integer,character varying);
-CREATE OR REPLACE FUNCTION find_all_notes_by_user(user_id integer, lmt integer, ofst integer)
+CREATE OR REPLACE FUNCTION find_all_notes_by_user(user_id integer, lmt integer, ofst integer, tg varchar)
 RETURNS TABLE("noteId" integer, "title" varchar, "body" text, "updatedAt" timestamp, "tags" varchar[]) AS $$
 DECLARE
 BEGIN
@@ -8,7 +8,7 @@ BEGIN
     FROM notes n
     LEFT OUTER JOIN notes_tags nt ON n.id = nt.note_id
     LEFT OUTER JOIN tags t ON nt.tag_id = t.id
-    WHERE n.userid = user_id
+    WHERE n.userid = user_id and t.name like tg
     GROUP BY n.id
     ORDER BY n.updated_at DESC
     OFFSET ofst

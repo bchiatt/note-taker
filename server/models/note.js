@@ -9,9 +9,9 @@ var pg     = require('../postgres/manager'),
 function Note(){
 }
 
-Note.list = function(userId, limit, offset, cb){
-   pg.query('SELECT * FROM find_all_notes_by_user($1, $2, $3)', [userId, limit, offset], function(err, results){
-     cb(err, results.rows);
+Note.list = function(userId, limit, offset, tag, cb){
+   pg.query('SELECT * FROM find_all_notes_by_user($1, $2, $3, $4)', [userId, limit, offset, tag], function(err, results){
+     cb(err, (results && results.rows ? results.rows : null));
    });
 };
 

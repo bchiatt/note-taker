@@ -9,14 +9,16 @@ module.exports = {
   validate: {
     query: {
       limit: Joi.string(),
-      offset: Joi.string()
+      offset: Joi.string(),
+      tag: Joi.string()
     }
   },
   handler: function(request, reply){
     var limit  = request.query.limit,
-        offset = request.query.offset;
+        offset = request.query.offset,
+        tag    = request.query.tag;
 
-    Note.list(request.auth.credentials.id, limit, offset, function(err, result){
+    Note.list(request.auth.credentials.id, limit, offset, tag, function(err, result){
       reply(result);
     });
   }

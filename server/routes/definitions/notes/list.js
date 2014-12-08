@@ -13,8 +13,9 @@ module.exports = {
     }
   },
   handler: function(request, reply){
-    var limit  = request.query.limit || 5,
-        offset = request.query.offset || 0;
+    var limit  = request.query.limit,
+        offset = request.query.offset;
+
     Note.list(request.auth.credentials.id, limit, offset, function(err, result){
       reply(result);
     });

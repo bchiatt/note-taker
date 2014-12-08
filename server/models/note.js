@@ -10,24 +10,24 @@ function Note(){
 }
 
 Note.list = function(userId, limit, offset, cb){
-   console.log('limit', limit);
-   console.log('offset', offset);
    pg.query('SELECT * FROM find_all_notes_by_user($1, $2, $3)', [userId, limit, offset], function(err, results){
-     console.log('err', err);
      cb(err, results.rows);
    });
 };
 
-Note.findOne = function(noteId, limit, offset, cb){
+Note.findOne = function(noteId, cb){
   pg.query('SELECT * FROM find_note_by_id($1)', [noteId], function(err, results){
-    cb(err, results && results.rows ? results.rows : null);
+    results = (results && results.rows ? results.rows[0] : null);
+    cb(err, results);
   });
 };
 
 Note.remove = function(id, cb){
   pg.query('SELECT array_agg(url) as urls FROM photos WHERE note_id = $1', [id], function(err, results){
-    var photos = (results.rows ? results.rows[0].urls.map(makePhotoDeleteObj) : null);
+    console.log('results', results);
+    var photos = (results.rows[0].urls === null ? null : results.rows[0].urls.map(makePhotoDeleteObj));
     pg.query('SELECT delete_note($1)', [id], function(err, results){
+      if(photos === null){return cb();}
       var s3 = new AWS.S3(),
           params = {
             Bucket: process.env.AWS_BUCKET,
@@ -47,7 +47,6 @@ Note.create = function(userId, obj, cb){
   obj.file = (obj.file[0] ? obj.file : [obj.file]);
 
   async.map(obj.file, makePhotoUrls, function(err, photoUrls){
-    console.log(photoUrls[0]);
     var urls = (photoUrls[0] === null ? [] : photoUrls.map(function(obj){return obj.url;}));
     pg.query('select add_note($1, $2, $3, $4, $5)', [userId, obj.title, obj.body, obj.tags, urls], function(err, results){
       async.map(photoUrls, savePhotosToS3, function(){
@@ -67,7 +66,7 @@ function makePhotoDeleteObj(photo){
 }
 
 function makePhotoUrls(photo, cb){
-  if(!photo.length){return cb(null, null);}
+  if(!photo._data){return cb(null, null);}
   var ext  = path.extname(photo.hapi.filename);
 
   crypto.randomBytes(48, function(ex, buf){

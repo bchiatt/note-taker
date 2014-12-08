@@ -12,8 +12,8 @@ module.exports = {
     }
   },
   handler: function(request, reply){
-    Note.remove(request.params.id, function(err, result){
-      reply(result).code(result ? 200 : 400);
+    Note.remove(request.params.id, function(err){
+      reply().code(err ? 400 : 200);
     });
   }
 };

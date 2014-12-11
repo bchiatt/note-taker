@@ -49,9 +49,21 @@ Note.create = function(userId, obj, cb){
   async.map(obj.file, makePhotoUrls, function(err, photoUrls){
     var urls = (photoUrls[0] === null ? [] : photoUrls.map(function(obj){return obj.url;}));
     pg.query('select add_note($1, $2, $3, $4, $5)', [userId, obj.title, obj.body, obj.tags, urls], function(err, results){
-      async.map(photoUrls, savePhotosToS3, function(){
+      async.map(photoUrls, savePhotoToS3, function(){
         cb();
       });
+    });
+  });
+};
+
+Note.addPhoto = function(noteId, b64string, cb){
+  crypto.randomBytes(48, function(ex, buf){
+    var body = new Buffer(b64string, 'base64'),
+    token    = buf.toString('hex'),
+    key      = token + '.img.png',
+    url      = 'https://s3.amazonaws.com/' + process.env.AWS_BUCKET + '/' + key;
+    pg.query('insert into photos(note_id, url) values ($1, $2)', [noteId, url], function(err, response){
+      savePhotoToS3({key:key, body:body}, cb);
     });
   });
 };
@@ -77,7 +89,7 @@ function makePhotoUrls(photo, cb){
   });
 }
 
-function savePhotosToS3(photo, cb){
+function savePhotoToS3(photo, cb){
   if(photo === null){return cb();}
   var s3   = new AWS.S3(),
       params = {Bucket: process.env.AWS_BUCKET, Key: photo.key, Body: photo.body, ACL: 'public-read'};

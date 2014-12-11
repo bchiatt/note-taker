@@ -8,6 +8,7 @@ module.exports = [
   {method: 'get',    path: '/status',     config: require('../definitions/users/status')},
   {method: 'get',    path: '/notes',      config: require('../definitions/notes/list')},
   {method: 'get',    path: '/notes/{id}', config: require('../definitions/notes/show')},
+  {method: 'put',    path: '/notes/{id}', config: require('../definitions/notes/photo')},
   {method: 'delete', path: '/notes/{id}', config: require('../definitions/notes/delete')},
   {method: 'post',   path: '/notes',      config: require('../definitions/notes/create')}
 ];
